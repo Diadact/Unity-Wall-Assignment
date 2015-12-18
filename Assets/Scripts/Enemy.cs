@@ -32,10 +32,10 @@ public class Enemy : MonoBehaviour
             }
         }
         if (CurrentHP <= 0)
-        {
+        {       
+            Destroy(gameObject);
             ParticleSystem p = Instantiate(particles, transform.position, transform.rotation) as ParticleSystem;
             Destroy(p, 1);
-            Destroy(gameObject);
         }
     }
     void OnCollisionEnter(Collision other)
