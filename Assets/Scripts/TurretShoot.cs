@@ -3,7 +3,7 @@ using System.Collections;
 
 public class TurretShoot : MonoBehaviour {
 
-    public Transform player;
+    public Transform enemy;
     public float distance;
 
     public float speed = 100;
@@ -27,15 +27,14 @@ public class TurretShoot : MonoBehaviour {
          
 	void Update () {
 
-        if(player != null)
+        if(enemy != null)
         {
-            distance = Vector3.Distance(player.position, transform.position);
+            distance = Vector3.Distance(enemy.position, transform.position);
 
             Debug.Log(distance);
             if (distance <= 160)
             {
-                transform.LookAt(player);
-                Debug.Log("Looking at Player");
+                transform.LookAt(enemy);
             }
 
             if (distance <= 80)
@@ -43,7 +42,7 @@ public class TurretShoot : MonoBehaviour {
                 AutoTimer += Time.deltaTime;
                 if (AutoTimer >= AutoDelay)
                 {
-                    Debug.Log("Shooting Player");
+                    Debug.Log("Shooting Enemy");
                     AutoTimer = 0.0f;
 
                     Rigidbody instantiateProjectile = Instantiate(projectile, transform.position + transform.TransformDirection(Vector3.forward*4), transform.rotation) as Rigidbody;

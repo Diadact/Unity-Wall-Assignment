@@ -16,14 +16,20 @@ public class Shooting : MonoBehaviour {
     private float ReloadTimer = 0.0f;
     bool reloading = false;
     public float ammoLeft;
+    public Transform targeting;
+    public float spareAmmo = 100;
+    public float ammoNeeded = 0;
+    public float restOfAmmo;
+    bool outOfAmmo = false;
 
 	// Use this for initialization
 	void Start ()
     {
         Ammo = MaxAmmo;
         ammoLeft = MaxAmmo;
+        restOfAmmo = spareAmmo;
 
-        currentAmmo.text = "Ammo: " + ammoLeft.ToString();
+        currentAmmo.text = "Ammo: " + ammoLeft.ToString() + "/" + spareAmmo.ToString();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -33,25 +39,43 @@ public class Shooting : MonoBehaviour {
 	void Update ()
     {
         AutoTimer += Time.deltaTime;
-        if(AutoTimer >= AutoDelay)
+
+        currentAmmo.text = "Ammo: " + ammoLeft.ToString() + "/" + spareAmmo.ToString();
+
+        if (AutoTimer >= AutoDelay)
         {
-		    if(Input.GetButton("Fire1") && Ammo > 0 && reloading == false)
+		    if(Input.GetButton("Fire1") && Ammo > 0 && reloading == false && ammoLeft > 0)
             {
+                RaycastHit hit;
+                Physics.Raycast(targeting.position, targeting.forward, out hit);
+
                 AutoTimer = 0.0f;
+
+                if (hit.collider != null && hit.point != Vector3.zero)
+                {
+                    transform.LookAt(hit.point);
+                }
 
                 Rigidbody instantiateProjectile = Instantiate(projectile,transform.position,transform.rotation) as Rigidbody;
 			    instantiateProjectile.velocity = transform.TransformDirection(new Vector3(0,0,speed));
                 ammoLeft--;
-                currentAmmo.text = "Ammo: " + ammoLeft.ToString();
-                Ammo--;                       
+                currentAmmo.text = "Ammo: " + ammoLeft.ToString() + "/" + spareAmmo.ToString();
+                Ammo--;
+                ammoNeeded++;
+                restOfAmmo--;                 
 		    }         
         }
+        if (spareAmmo <= 0)
+        {
+            outOfAmmo = true;
+        }
+
         if (Ammo == 0)
         {
             reloadText.text = "Reload (R)";
             Debug.Log("Out of Ammo");
         }
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && outOfAmmo != true)
         {
             reloading = true;            
         }
@@ -64,12 +88,28 @@ public class Shooting : MonoBehaviour {
 
         if (ReloadTimer >= ReloadDelay)
         {
-            ammoLeft = MaxAmmo;
-            currentAmmo.text = "Ammo: " + ammoLeft.ToString();
-            Ammo = MaxAmmo;
-            reloading = false;
-            ReloadTimer = 0.0f;
-            reloadText.text = "";
+            if (spareAmmo > MaxAmmo)
+            {
+                ammoLeft = MaxAmmo;
+                currentAmmo.text = "Ammo: " + ammoLeft.ToString() + "/" + spareAmmo.ToString();
+                Ammo = MaxAmmo;
+                reloading = false;
+                ReloadTimer = 0.0f;
+                ammoNeeded = 0.0f;
+                spareAmmo = restOfAmmo;
+                reloadText.text = "";
+            }
+            else
+            {
+                ammoLeft = spareAmmo;
+                currentAmmo.text = "Ammo: " + ammoLeft.ToString() + "/" + spareAmmo.ToString();
+                Ammo = MaxAmmo;
+                reloading = false;
+                ReloadTimer = 0.0f;
+                ammoNeeded = 0.0f;
+                spareAmmo = 0;
+                reloadText.text = "";
+            }
         }       
     }
 }

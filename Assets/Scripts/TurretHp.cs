@@ -15,8 +15,7 @@ public class TurretHp : MonoBehaviour {
         if(MaxHP == 0)
         {
             Destroy(gameObject);
-        }
-	
+        }	
 	}
 
     void OnCollisionEnter(Collision other)

@@ -5,8 +5,9 @@ using System.Collections;
 public class PlayerHP : MonoBehaviour {
 
     public float MaxHp = 100.0f;
-    private float CurrentHp;
+    public float CurrentHp;
     public Text HPText;
+    public float MissingHp;
 
 	void Start () {
 
@@ -25,9 +26,10 @@ public class PlayerHP : MonoBehaviour {
 
     void OnCollisionEnter(Collision other)
     {
-        if(other.gameObject.CompareTag("Projectile") && CurrentHp > 0)
+        if (other.gameObject.CompareTag("Projectile") && CurrentHp > 0)
         {
             CurrentHp -= 10;
+            MissingHp += 10;
         }
     }
 }

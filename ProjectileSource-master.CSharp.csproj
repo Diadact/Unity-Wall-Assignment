@@ -76,6 +76,9 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\BulletCollision.cs" />
     <Compile Include="Assets\Scripts\CreateWall.cs" />
+    <Compile Include="Assets\Scripts\Enemy.cs" />
+    <Compile Include="Assets\Scripts\EnemySpawner.cs" />
+    <Compile Include="Assets\Scripts\HpPickup.cs" />
     <Compile Include="Assets\Scripts\PlayerHP.cs" />
     <Compile Include="Assets\Scripts\Shooting.cs" />
     <Compile Include="Assets\Scripts\TurretHp.cs" />
